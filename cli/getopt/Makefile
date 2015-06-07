@@ -8,11 +8,8 @@ TARGET = getopt-bsdc getopt_long-bsdc
 
 all: $(TARGET) $(TARGET_CPP)
 
-%: %.c $(DEPS)
+%: %.c 
 	$(CC) -o $@ $< $(CFLAGS)
 
-$(TARGET_CPP): $(TARGET_CPP).cc
-	$(CC) $(CFLAGS) -o $(TARGET_CPP) $(TARGET_CPP).cc
-
-clean:
-	$(RM) $(TARGET)
+#%: %.cc 
+#	$(CXX) $(CXXFLAGS) -o $@ $<
