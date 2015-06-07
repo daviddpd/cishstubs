@@ -16,15 +16,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <stdio.h>
 #include <unistd.h>
-
+#include <getopt.h>
+     
 void usage(char* p) {
 
 	printf ("%s [-hf] [-s string] [-i interger] [-d float]\n", p);
-	printf ("   -h            print help/usage \n");
-	printf ("   -f            set the flag\n");
-	printf ("   -s string     pass string to the s-flag\n");
-	printf ("   -i int        passing the interger to the i-flag\n");
-	printf ("   -d float      passing floating point number to the d-flag (d for double)\n");
+	printf ("   -h --help              print help/usage \n");
+	printf ("   -f --flag              set the flag\n");
+	printf ("   -s --string string     pass string to the s-flag\n");
+	printf ("   -i --int int           passing the interger to the i-flag\n");
+	printf ("   -d --float float       passing floating point number to the d-flag (d for double)\n");
 
 }
 
@@ -37,9 +38,54 @@ int main(int argc, char**argv)
 	-f [ 'flag', "boolean flag",   ], 
 	-i [ 'int|i=i', "interger option", { default => 1 }  ],
 	-d [ 'float|f=f', "interger option", { default => 0.1 }  ],
+
+	struct option {
+		char *name;
+		int has_arg;
+		int *flag;
+		int val;
+	};
 */
 
-	while ((ch = getopt(argc, argv, "hs:fi:d:")) != -1) {
+	static struct option longopts[] = {
+		{	"str",
+			required_argument,
+			NULL,
+			's'
+		},
+		{	"int",
+			required_argument,
+			NULL,
+			'i'
+		},
+		{	"float",
+			required_argument,
+			NULL,
+			'd'
+		},
+
+		{	"flag",
+			no_argument,
+			NULL,
+			'f'
+		},
+		{	"help",
+			no_argument,
+			NULL,
+			'h'
+		},
+
+		/*  remember a zero line, else 
+			getopt_long segfaults with unknown options */
+	    {NULL, 
+	    0, 
+	    0, 
+	    0}, 
+			
+	};
+
+
+	while ((ch = getopt_long(argc, argv, "hs:fi:d:", longopts, NULL)) != -1) {
 		switch (ch) {
 			case 's':
 				printf ( "Arg -s : Value : %s \n", optarg );
